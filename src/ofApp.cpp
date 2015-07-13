@@ -121,9 +121,16 @@ void ofApp::makePCBRender()
             cairo.drawString(  ofToString(j),  0*padding, j*padding,0, OF_BITMAPMODE_SIMPLE);
 
 
+
+
+
             cairo.setColor(165,205,237, 120);
 
             cairo.drawCircle(i*padding, j*padding, 0, 8);
+
+            cairo.setColor(250, 250, 250, 255);
+
+            cairo.drawCircle(i*padding, j*padding, 0, 2);
         }
 
 //        cairo.setColor(199, 224, 244, 255);
@@ -136,11 +143,11 @@ void ofApp::makePCBRender()
 
 //        if ((pcb_rect.getTopLeft().x + i*padding) < pcb_rect.getTopRight().x)
 //            cairo.drawLine(i*padding, 0, 0, i*padding , pcb_rect.height, 0);
-        cairo.drawLine(i*padding, 0, 0, i*padding , 630, 0);
+//        cairo.drawLine(i*padding, 0, 0, i*padding , 630, 0);
 
 //        if( (pcb_rect.getTopLeft().y + i*padding) < pcb_rect.getBottomRight().y)
 //            cairo.drawLine(0, i*padding, 0, pcb_rect.width, i*padding, 0);
-        cairo.drawLine(0, i*padding, 0, 630, i*padding, 0);
+//        cairo.drawLine(0, i*padding, 0, 630, i*padding, 0);
 
     }
 
