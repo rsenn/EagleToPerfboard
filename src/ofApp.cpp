@@ -1,5 +1,29 @@
 #include "ofApp.h"
 
+
+void ofApp::setup()
+{
+    ofSetFrameRate(30);
+
+    sch_x = 0;
+    sch_y = 0;
+
+    center.x = 0;
+    center.y = 0;
+
+    fileName = "/Users/xcorex/pcb2.png";
+
+    loadAndProcessPCB();
+
+
+    pcbBgColor.set(244,224,199);
+    pcbPadColor.set(223, 149, 114);
+    pcbBoardColor.set(241,217,187, 255);
+    pcbGridColor.set(237, 205, 165,255);
+
+    //every half sec check file timestamp
+    timerCheckTimestamp.setInterval(0.5);
+}
 //--------------------------------------------------------------
 void ofApp::makePCBtransparent()
 {
@@ -76,7 +100,7 @@ void ofApp::extractCorner()
 void ofApp::makePCBRender()
 {
 
-    int margin = 50;
+    int margin = 60;
     int padding = 60;
 
     int pcb_hole_h = 12;
@@ -155,26 +179,7 @@ void ofApp::loadAndProcessPCB()
     makePCBRender();
 }
 
-void ofApp::setup()
-{
-    ofSetFrameRate(30);
 
-    center.x = 0;
-    center.y = 0;
-
-    fileName = "/Users/xcorex/pcb2.png";
-
-    loadAndProcessPCB();
-
-
-    pcbBgColor.set(244,224,199);
-    pcbPadColor.set(223, 149, 114);
-    pcbBoardColor.set(241,217,187, 255);
-    pcbGridColor.set(237, 205, 165,255);
-
-    //every half sec check file timestamp
-    timerCheckTimestamp.setInterval(0.5);
-}
 //--------------------------------------------------------------
 void ofApp::update()
 {
@@ -222,33 +227,64 @@ void ofApp::draw()
     ofBackground(255,255,255);
 
     ofPushMatrix();
-    ofTranslate(-pcb_rect.x, -pcb_rect.y);
-    //ofTranslate( (ofGetWidth()/2 )- cairo , ( ofGetHeight()/2 ) - 800);
+//    ofScale(0.5,0.5);
+
+    ofPushMatrix();
+    ofTranslate( (ofGetWidth()/2 )- cairoimg.width - 10, ( ofGetHeight()/2 ) - cairoimg.height/2);
     ofPushStyle();
-    //ofSetColor(pcbBoardColor);
-    //ofRect(pcb_rect);
-    //ofEnableAlphaBlending();
-    cairoimg.draw(pcb_rect.x, pcb_rect.y);
-    //ofDisableAlphaBlending();
+    cairoimg.draw(0,0);
     ofEnableAlphaBlending();
     ofPushStyle();
     ofSetColor(255,255,255,80);
-    pcb.draw(50,50);
+    pcb.draw(60*sch_x-pcb_rect.x,60*sch_y-pcb_rect.y);
     ofPopStyle();
     ofDisableAlphaBlending();
     ofPopMatrix();
-    //crosshair
+
+
+    ofPushMatrix();
+    ofTranslate( (ofGetWidth()/2 ) + 10 , ( ofGetHeight()/2 ) - cairoimg.height/2);
     ofPushStyle();
-    ofSetColor(255,0,0);
-    ofLine(mouseX,mouseY - 50, mouseX, mouseY + 50);
-    ofLine(mouseX - 50, mouseY, mouseX + 50, mouseY);
+    cairoimg.draw(0,0);
+    ofEnableAlphaBlending();
+    ofPushStyle();
+    ofSetColor(255,255,255,80);
+    pcb.draw(60*(-sch_x+1)+pcb_rect.x +8 + pcb.width,60*sch_y-pcb_rect.y, -pcb.width, pcb.height);
     ofPopStyle();
+    ofDisableAlphaBlending();
+    ofPopMatrix();
+
+    ofPopMatrix();
+
+//    //crosshair
+//    ofPushStyle();
+//    ofSetColor(255,0,0);
+//    ofLine(mouseX,mouseY - 50, mouseX, mouseY + 50);
+//    ofLine(mouseX - 50, mouseY, mouseX + 50, mouseY);
+//    ofPopStyle();
 
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key)
+
 {
+    if (key == 'w')
+    {
+        sch_y--;
+    }
+        else if ( key == 's')
+    {
+        sch_y++;
+    }
+        else if ( key == 'a')
+    {
+        sch_x--;
+    }
+        else if ( key == 'd')
+    {
+        sch_x++;
+    }
 }
 
 //--------------------------------------------------------------

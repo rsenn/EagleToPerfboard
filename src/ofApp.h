@@ -21,14 +21,20 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 
+        //pcb theme color
+        ofColor pcbPadColor;
+        ofColor pcbBoardColor;
+        ofColor pcbBgColor;
+        ofColor pcbGridColor;
 
+        //pcb source file
         string fileName;
 
+        //auto refresh pcb
         ofxTiming timerCheckTimestamp;
         Poco::Timestamp lastPCBTimestamp;
 
         ofCairoRenderer cairo;
-
         ofImage pcb;
         ofImage cairoimg;
 
@@ -43,10 +49,12 @@ class ofApp : public ofBaseApp{
         std::vector<cv::Vec4i> lines;
         ofRectangle pcb_rect;
 
-        ofColor pcbPadColor;
-        ofColor pcbBoardColor;
-        ofColor pcbBgColor;
-        ofColor pcbGridColor;
+        int margin_test;
+
+
+        int sch_x;
+        int sch_y;
+
 
         void processPCB(string fileName);
         void extractCorner();
