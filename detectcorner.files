@@ -2,3 +2,4 @@ src/main.cpp
 src/ofApp.cpp
 src/ofApp.h
 addons.make
+src/extend/ofxtiming.h

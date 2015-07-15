@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "ofxOpenCv.h"
+#include "ofxtiming.h"
 
 class ofApp : public ofBaseApp{
 
@@ -21,8 +22,10 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
 
 
+        string fileName;
 
-        int idx;
+        ofxTiming timerCheckTimestamp;
+        Poco::Timestamp lastPCBTimestamp;
 
         ofCairoRenderer cairo;
 
@@ -51,4 +54,5 @@ class ofApp : public ofBaseApp{
         void makePCBtransparent();
         void makePCBRender();
         void drawPerfGrid();
+        void loadAndProcessPCB();
 };

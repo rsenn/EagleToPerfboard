@@ -40,3 +40,4 @@
 ../../../addons/ofxOpenCv/libs/opencv/include/
 src
 .
+src/extend
