@@ -3,12 +3,7 @@
 #include "ofMain.h"
 #include "ofxOpenCv.h"
 #include "ofxtiming.h"
-
-struct wire{
-    ofPoint start;
-    ofPoint stop;
-    float width;
-};
+#include "ofxeagleboard.h"
 
 class ofApp : public ofBaseApp{
 
@@ -27,9 +22,8 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 
-        //read xml
-        ofXml xmlEagleBoard;
-        vector<wire> wires;
+
+        ofxEagleBoard eagle;
 
 
         //pcb theme color

@@ -5,3 +5,4 @@ addons.make
 src/extend/ofxtiming.h
 src/ofxeagleboard.h
 src/ofxeagleboard.h
+src/eagleelement.h
