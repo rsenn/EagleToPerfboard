@@ -4,6 +4,12 @@
 #include "ofxOpenCv.h"
 #include "ofxtiming.h"
 
+struct wire{
+    ofPoint start;
+    ofPoint stop;
+    float width;
+};
+
 class ofApp : public ofBaseApp{
 
 	public:
@@ -20,6 +26,11 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
+
+        //read xml
+        ofXml xmlEagleBoard;
+        vector<wire> wires;
+
 
         //pcb theme color
         ofColor pcbPadColor;
