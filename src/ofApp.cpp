@@ -117,7 +117,7 @@ void ofApp::makePCBRender()
 
 
     cairo.setupMemoryOnly(ofCairoRenderer::IMAGE,true,false, ofRectangle(0,0, canvas_w, canvas_h));
-    cairo.background(227, 240, 250, 255);
+    cairo.background(141, 175, 213, 255);
     cairo.setColor(165,205,237, 120); //nasty bug cairo colorspace is b g r
 
 
@@ -142,9 +142,9 @@ void ofApp::makePCBRender()
 
             for (int j =0 ; j < pcb_hole_v ; j++)
                 {
-                    cairo.setColor(165,205,237, 120);
+                    cairo.setColor(121,160,205, 120);
                     cairo.drawCircle(i*padding, j*padding, 0, pcb_hole_diameter_outer);
-                    cairo.setColor(250, 250, 250, 255);
+                    cairo.setColor(154, 184, 219, 255);
                     cairo.drawCircle(i*padding, j*padding, 0, pcb_hole_diameter_inner);
                 }
 
@@ -224,10 +224,10 @@ void ofApp::drawPerfGrid()
 
 void ofApp::draw()
 {
-    ofBackground(255,255,255);
+    ofBackground(222,189,160);
 
     ofPushMatrix();
-//    ofScale(0.5,0.5);
+    ofScale(0.75,0.75);
 
     ofPushMatrix();
     ofTranslate( (ofGetWidth()/2 )- cairoimg.width - 10, ( ofGetHeight()/2 ) - cairoimg.height/2);
@@ -236,6 +236,7 @@ void ofApp::draw()
     ofEnableAlphaBlending();
     ofPushStyle();
     ofSetColor(255,255,255,80);
+    ofRotateZ(90);
     pcb.draw(60*sch_x-pcb_rect.x,60*sch_y-pcb_rect.y);
     ofPopStyle();
     ofDisableAlphaBlending();
