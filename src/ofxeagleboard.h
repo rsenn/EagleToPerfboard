@@ -12,7 +12,7 @@ public:
     vector<EagleWire> wires;
     EagleBoard board;
 
-    map<string,string> mapElementLibrary;
+    map<string,EagleComponent> mapElementLibrary;
     map<string,EaglePackage> mapLibraryPackage;
 
 
@@ -81,7 +81,7 @@ public:
         xmlEagleBoard.setTo("plain"); //set to plain
         //parse board dimension
         int numChild = xmlEagleBoard.getNumChildren();
-        float scale = 10;
+        float scale = 25;
 
         for (int childIdx = 0; childIdx < numChild; childIdx++)
             {
@@ -148,7 +148,13 @@ public:
 
         do
             {
-                mapElementLibrary[xmlEagleBoard.getAttribute("name")] = xmlEagleBoard.getAttribute("library") + xmlEagleBoard.getAttribute("package");
+                EagleComponent * component = &mapElementLibrary[xmlEagleBoard.getAttribute("name")];
+
+                component->pos.x = (float) atof(xmlEagleBoard.getAttribute("x").c_str()) * scale;
+                component->pos.y = (float) atof(xmlEagleBoard.getAttribute("y").c_str()) * scale;
+                component->package = &mapLibraryPackage[xmlEagleBoard.getAttribute("library") + xmlEagleBoard.getAttribute("package")];
+
+                //ofLog() << component->pos.x;
             }
         while(xmlEagleBoard.setToSibling()); // go the next PT
 
@@ -156,10 +162,10 @@ public:
         xmlEagleBoard.setToParent(); //back to board
 
 
-        for(map<string,string>::iterator it = mapElementLibrary.begin(); it != mapElementLibrary.end(); it++)
-            {
-                ofLog() << it->second;
-            }
+//        for(map<string,structEagleComponent>::iterator it = mapElementLibrary.begin(); it != mapElementLibrary.end(); it++)
+//            {
+//                ofLog() << it->second.name;
+//            }
 
         //--------------
 
@@ -190,9 +196,9 @@ public:
                             }
                         else if (xmlEagleBoard.getName() == "contactref")
                             {
-                                string element_name = xmlEagleBoard.getAttribute("element");
+                                //string element_name = xmlEagleBoard.getAttribute("element");
 
-
+                                board.add(&mapElementLibrary[xmlEagleBoard.getAttribute("element")]);
 
                             }
                         else if  (xmlEagleBoard.getName() == "via")
@@ -214,7 +220,8 @@ public:
 
     void draw()
     {
-        mapLibraryPackage["linearDIL08"].draw();
+      //  mapElementLibrary["IC1"].draw();
+//        mapLibraryPackage["linearDIL08"].draw();
         board.draw();
     }
 };

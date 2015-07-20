@@ -5,12 +5,6 @@
 #include "ofMain.h"
 
 
-struct wire
-{
-    ofPoint start;
-    ofPoint stop;
-    float width;
-};
 
 
 class EagleElement
@@ -187,5 +181,40 @@ public:
 private:
     vector <EagleElement *> elements;
 };
+
+
+class EagleComponent : public EagleElement
+{
+public:
+
+    EagleComponent()
+    {
+        rot = 0;
+    }
+
+    void draw()
+    {
+
+        ofPushMatrix();
+        ofTranslate(pos);
+        package->draw();
+        ofPopMatrix();
+    }
+
+    ofPoint pos;
+    EaglePackage * package;
+    int rot;
+};
+
+
+struct wire
+{
+    ofPoint start;
+    ofPoint stop;
+    float width;
+};
+
+
+
 #endif // EAGLEELEMENT
 
