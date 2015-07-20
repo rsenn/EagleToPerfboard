@@ -134,9 +134,31 @@ private:
 class EaglePackage : public EagleElement
 {
 public:
+    EaglePackage()
+    {
 
+    }
+
+    void draw()
+    {
+        for(vector<EagleElement *>::iterator it = elements.begin(); it != elements.end(); it++){
+            (*it)->draw();
+        }
+    }
+
+    void add (EagleElement * _element)
+    {
+        elements.push_back(_element);
+    }
+
+    ~EaglePackage()
+    {
+        for(vector<EagleElement *>::iterator it = elements.begin(); it != elements.end(); it++){
+            delete (*it);
+        }
+    }
 private:
-
+    vector <EagleElement *> elements;
 };
 
 

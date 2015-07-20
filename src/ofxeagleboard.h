@@ -12,166 +12,210 @@ public:
     vector<EagleWire> wires;
     EagleBoard board;
 
-    void parse()
+    map<string,string> mapElementLibrary;
+    map<string,EaglePackage> mapLibraryPackage;
+
+
+    void addXmlChildWireToBoard(float scale, int layer)
     {
-        xmlEagleBoard.load("/Users/xcorex/Documents/Projects/EagleCad/projects/lifepatch/peakdetector/peakdetect_arduino/Untitled.brd");
 
-        xmlEagleBoard.setTo("eagle");
-        xmlEagleBoard.setTo("drawing");
-        xmlEagleBoard.setTo("board");
-        xmlEagleBoard.setTo("plain");
-
-        //parse board dimension
-
-        int numChild = xmlEagleBoard.getNumChildren();
-        float scale = 10;
-
-        for (int i = 0; i < numChild; i++)
+        if (xmlEagleBoard.getName() == "wire" && xmlEagleBoard.getAttribute("layer") == ofToString(layer))
             {
-                xmlEagleBoard.setToChild(i);
-
                 float x1 = std::atof(xmlEagleBoard.getAttribute("x1").c_str());
                 float y1 = std::atof(xmlEagleBoard.getAttribute("y1").c_str());
                 float x2 = std::atof(xmlEagleBoard.getAttribute("x2").c_str());
                 float y2 = std::atof(xmlEagleBoard.getAttribute("y2").c_str());
                 float width = std::atof(xmlEagleBoard.getAttribute("width").c_str());
 
-                xmlEagleBoard.setToParent();
+                x1 = x1 * scale;
+                y1 = y1 * scale;
+                x2 = x2 * scale;
+                y2 = y2 * scale;
+
+                EagleWire * wire = new EagleWire();
+                wire->set(x1,y1,x2,y2,width);
+
+                board.add(wire);
+            }
+
+    }
+
+
+    void addXmlChildWireToPackage(int j, float scale, EaglePackage * pkg)
+    {
+        xmlEagleBoard.setToChild(j);
+
+        if (xmlEagleBoard.getName() == "wire")
+            {
+                float x1 = std::atof(xmlEagleBoard.getAttribute("x1").c_str());
+                float y1 = std::atof(xmlEagleBoard.getAttribute("y1").c_str());
+                float x2 = std::atof(xmlEagleBoard.getAttribute("x2").c_str());
+                float y2 = std::atof(xmlEagleBoard.getAttribute("y2").c_str());
+                float width = std::atof(xmlEagleBoard.getAttribute("width").c_str());
 
                 x1 = x1 * scale;
                 y1 = y1 * scale;
                 x2 = x2 * scale;
                 y2 = y2 * scale;
 
-                //ofLog() << xmlEagleBoard.getName() << "start: " << x1 << "," << y1 << " stop: " << x2 << "," << y2;
-
-//                wire line;
-//                line.start.set(x1,y1);
-//                line.stop.set(x2,y2);
-//                line.width = width;
-//                wires.push_back(line);
-                  EagleWire * wire = new EagleWire();
-                  wire->set(x1,y1,x2,y2,width);
-                  //wires.push_back(wire);
-                  board.add(wire);
-
+                EagleWire * wire = new EagleWire();
+                wire->set(x1,y1,x2,y2,width);
+                pkg->add(wire);
             }
+
         xmlEagleBoard.setToParent();
 
+    }
 
-        //parse all signals
+    void parse()
+    {
+        xmlEagleBoard.load("/Users/xcorex/Documents/Projects/EagleCad/projects/lifepatch/peakdetector/peakdetect_arduino/Untitled.brd");
 
-        xmlEagleBoard.setTo("signals[0]");
-        xmlEagleBoard.setTo("signal[0]");
+        xmlEagleBoard.setTo("eagle");
+        xmlEagleBoard.setTo("drawing");
+        xmlEagleBoard.setTo("board"); //parent
 
-        // get each individual x,y for each point
+
+        //--------------
+
+        xmlEagleBoard.setTo("plain"); //set to plain
+        //parse board dimension
+        int numChild = xmlEagleBoard.getNumChildren();
+        float scale = 10;
+
+        for (int childIdx = 0; childIdx < numChild; childIdx++)
+            {
+                xmlEagleBoard.setToChild(childIdx);
+                addXmlChildWireToBoard(scale, 20);
+                xmlEagleBoard.setToParent();
+            }
+        xmlEagleBoard.setToParent(); //back to board
+
+
+        //--------------
+
+
+        //--------------
+
+
+        xmlEagleBoard.setTo("libraries"); //set to libraries
+        xmlEagleBoard.setTo("library[0]"); //set to packages
+
         do
             {
-                ofLog() << xmlEagleBoard.getAttribute("name");
-                int childnum = xmlEagleBoard.getNumChildren();
+                string library_name = xmlEagleBoard.getAttribute("name");
 
-                for (int j = 0; j < childnum; j++)
+                xmlEagleBoard.setTo("packages"); //set to packages
+                xmlEagleBoard.setTo("package[0]"); //set to package
+
+                do
                     {
+                        string package_name = xmlEagleBoard.getAttribute("name");
+                        EaglePackage * eaglePkg = new EaglePackage();
 
-                        xmlEagleBoard.setToChild(j);
-
-                        if (xmlEagleBoard.getName() == "wire" && xmlEagleBoard.getAttribute("layer") == "16")
+                        int childnum = xmlEagleBoard.getNumChildren();
+                        for (int childIdx = 0; childIdx < childnum; childIdx++)
                             {
-                                float x1 = std::atof(xmlEagleBoard.getAttribute("x1").c_str());
-                                float y1 = std::atof(xmlEagleBoard.getAttribute("y1").c_str());
-                                float x2 = std::atof(xmlEagleBoard.getAttribute("x2").c_str());
-                                float y2 = std::atof(xmlEagleBoard.getAttribute("y2").c_str());
-                                float width = std::atof(xmlEagleBoard.getAttribute("width").c_str());
 
-                                x1 = x1 * scale;
-                                y1 = y1 * scale;
-                                x2 = x2 * scale;
-                                y2 = y2 * scale;
-
-                                //ofLog() << xmlEagleBoard.getName() << "start: " << x1 << "," << y1 << " stop: " << x2 << "," << y2;
-
-//                                wire line;
-//                                line.start.set(x1,y1);
-//                                line.stop.set(x2,y2);
-//                                line.width = width;
-//                                wires.push_back(line);
-
-                                EagleWire * wire = new EagleWire();
-                                wire->set(x1,y1,x2,y2,width);
-//                                wires.push_back(wire);
-                                board.add(wire);
+                                addXmlChildWireToPackage(childIdx, scale, eaglePkg);
                             }
 
-                        xmlEagleBoard.setToParent();
-                    }
+                        mapLibraryPackage[library_name + package_name] = *eaglePkg;
 
+                    }
+                while(xmlEagleBoard.setToSibling());  // go the next package[]
+
+
+                xmlEagleBoard.setToParent(); //back to packages
+                xmlEagleBoard.setToParent(); //back to library[]
+
+            }
+        while(xmlEagleBoard.setToSibling()); // go the next library[]
+
+
+
+        xmlEagleBoard.setToParent(); //back to libraries
+        xmlEagleBoard.setToParent(); //back to board
+
+
+
+
+        //--------------
+
+
+        xmlEagleBoard.setTo("elements"); //set to elements
+        xmlEagleBoard.setTo("element[0]"); //set to element[0]
+
+        do
+            {
+                mapElementLibrary[xmlEagleBoard.getAttribute("name")] = xmlEagleBoard.getAttribute("library") + xmlEagleBoard.getAttribute("package");
             }
         while(xmlEagleBoard.setToSibling()); // go the next PT
 
+        xmlEagleBoard.setToParent(); //back to elements
+        xmlEagleBoard.setToParent(); //back to board
 
 
-//        vector<EagleWire>::iterator it = wires.begin();
-//        for(; it != wires.end(); ++it)
-//            {
-//                EagleWire  *w = &(*it);
-//                ofLog() << xmlEagleBoard.getName() << "start: " << w->start << " stop: " <<  w->stop;
-//            }
+        for(map<string,string>::iterator it = mapElementLibrary.begin(); it != mapElementLibrary.end(); it++)
+            {
+                ofLog() << it->second;
+            }
+
+        //--------------
+
+        //parse all signals
+        xmlEagleBoard.setTo("signals");
+        xmlEagleBoard.setTo("signal[0]");
+        // get each individual x,y for each point
+        // iterate signal 0 ... end
+        // signals
+        //  |______signal[0] / GND
+        //                |_________ wire
+        //                |_________ contact ref
+        //                |_________ via
+        //  |______signal[1] / VCC..
+        //                |_________ contact ref
+        //                |_________ via
+        do
+            {
+                int childnum = xmlEagleBoard.getNumChildren();
+                for (int childIdx = 0; childIdx < childnum; childIdx++)
+                    {
+                        xmlEagleBoard.setToChild(childIdx); //enter child
+
+                        if (xmlEagleBoard.getName() == "wire")
+                            {
+
+                                addXmlChildWireToBoard(scale, 16);
+                            }
+                        else if (xmlEagleBoard.getName() == "contactref")
+                            {
+                                string element_name = xmlEagleBoard.getAttribute("element");
 
 
-        //    do
-        //        {
-        //            if (xmlEagleBoard.getAttribute("layer") == "20")
-        //            {
-        //                string x1 = xmlEagleBoard.getAttribute("x1");
-        //                string y1 = xmlEagleBoard.getAttribute("y1");
 
-        //                string x2 = xmlEagleBoard.getAttribute("x2");
-        //                string y2 = xmlEagleBoard.getAttribute("y2");
+                            }
+                        else if  (xmlEagleBoard.getName() == "via")
+                            {
 
+                            }
+                        xmlEagleBoard.setToParent(); //exit child
+                    }
+            }
+        while(xmlEagleBoard.setToSibling()); // go the next PT
 
-        //                float x1f = atof(x1.c_str());
-
-        //                ofLog() << xmlEagleBoard.getName();
-
-        //    //            printf("%s found\n", x1.c_str());
-        //               // printf("%f found\n", x1f);
-        //            }
+        xmlEagleBoard.setToParent(); //back to signals
+        xmlEagleBoard.setToParent(); //back to board
 
 
-        //        }
-
-        //    xmlEagleBoard.
-        //    while(xmlEagleBoard.setToSibling());
-
-        //std::exit();
-
+        //--------------
 
     }
 
     void draw()
     {
-
+        mapLibraryPackage["linearDIL08"].draw();
         board.draw();
-
-//        vector<EagleWire>::iterator it = wires.begin();
-
-
-
-//        // loop through, increasing to next element until the end is reached
-//        for(; it != wires.end(); ++it)
-//            {
-//                EagleWire  *w = &(*it);
-//                w->draw();
-////                ofPushStyle();
-////                ofSetLineWidth(w->width*10);
-
-////                ofLine(w->start, w->stop);
-////                ofPopStyle();
-////                ofCircle(w->start, w->width*5);
-////                ofCircle(w->stop,  w->width*5);
-
-//            }
-
     }
 };
 
