@@ -2,7 +2,7 @@
 
 #include "ofMain.h"
 #include "ofxOpenCv.h"
-#include "ofxtiming.h"
+#include "extend/ofxtiming.h"
 
 class ofApp : public ofBaseApp{
 
